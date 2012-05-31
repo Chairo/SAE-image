@@ -41,6 +41,17 @@ def upload_c_post():
     put_obj2storage(_filename, _content, expires='365', type=_content_type)
     return _filename
 
+@app.put('/api/upload')
+@app.post('/api/upload')
+def api_upload():
+    _data = request.POST.get('data')
+    _filetype = request.POST.get('filename').split('.')[-1].lower()
+    _filename = '%s%s.%s'%(str(int(time.time())), RandUrl(6), _filetype)
+    _content_type='image/%s'%_filetype
+    put_obj2storage(_filename, _data, expires='365', type=_content_type)
+    return '/img/%s'%_filename
+
+
 @app.get('/img/<filename:re:.*[^/]>')
 def get_img(filename):
     _filetype = filename.split('.')[-1]
